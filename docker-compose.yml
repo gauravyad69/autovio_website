@@ -1,0 +1,14 @@
+
+services:
+  angular-app:
+    image: ghcr.io/gauravyad69/autovio_website:latest  # Pre-built Angular image
+    container_name: autovio-website
+    networks:
+      - app-network
+    ports:
+      - "9092:9092"  # Expose the port (if needed for debugging or other uses)
+
+networks:
+  app-network:
+    driver: bridge
+
