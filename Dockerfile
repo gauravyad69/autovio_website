@@ -13,6 +13,14 @@ RUN npm run build --prod
 # Final stage - use Caddy Alpine image
 FROM caddy:2.6.0-alpine
 COPY Caddyfile /etc/caddy/Caddyfile
+
+# List directories during the build process
+RUN ls -d */
+RUN ls -d /
+RUN ls -d /
+RUN ls -d app/
+RUN ls -d ecommerce/
+
 # Copy built assets from build stage
 COPY --from=build /app/dist/ecommerce/* /usr/share/caddy
 # Expose the port and use default Caddy command
