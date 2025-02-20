@@ -123,7 +123,7 @@ export class ProductDetailsComponent implements OnInit {
 
   product!: ProductModel
   productId!: number
-  categoryId!: number
+  categoryId!: string
   imgNotFounded: boolean = false;
   cartList!: CartItem[];
   WishItems!: WishItem[];
@@ -244,7 +244,7 @@ export class ProductDetailsComponent implements OnInit {
   }
 
 
-  getProductsByCategory(categoryId: number) {
+  getProductsByCategory(categoryId: string) {
     this._productService.getProductsByCategory(categoryId).subscribe((data) => {
       this.categoryProducts = data;
     })

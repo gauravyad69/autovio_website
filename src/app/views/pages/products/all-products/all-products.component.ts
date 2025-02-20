@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import {CommonModule, NgOptimizedImage} from '@angular/common';
 import { CartItem } from '../../models/cart';
 import { WishItem } from '../../models/wishlist';
 import { CartService } from '../../services/cart.service';
@@ -11,8 +11,11 @@ import { NgxSkeletonLoaderModule } from "ngx-skeleton-loader";
 import { FilterPipe } from "../pipe/filter.pipe";
 import { InfiniteScrollModule } from "ngx-infinite-scroll";
 import { FormsModule } from "@angular/forms";
-import { ProductModel } from '../../models/product.model';
+import {Carrousel, CategoryModel, ProductModel} from '../../models/product.model';
 import { NprCurrencyPipe } from '../pipe/npr-currency.pipe';
+import { CarouselModule } from 'ngx-owl-carousel-o';
+import { OwlOptions } from 'ngx-owl-carousel-o';
+
 
 @Component({
   selector: 'app-all-products',
@@ -25,7 +28,9 @@ import { NprCurrencyPipe } from '../pipe/npr-currency.pipe';
     FilterPipe,
     InfiniteScrollModule,
     FormsModule,
-    NprCurrencyPipe
+    NprCurrencyPipe,
+    CarouselModule,
+    NgOptimizedImage,
   ],
   styleUrls: ['./all-products.component.scss']
 })
@@ -42,6 +47,64 @@ export class AllProductsComponent implements OnInit {
   scrollDistance: number = 1;
   scrollUpDistance: number = 2;
 
+  carrousels: Carrousel[] = [];
+  categories: CategoryModel[] = [];
+
+  // Add carousel options
+  customOptions: OwlOptions = {
+    loop: true,
+    mouseDrag: true,
+    touchDrag: true,
+    pullDrag: true,
+    dots: true,
+    navSpeed: 700,
+    navText: ['', ''],
+    responsive: {
+      0: {
+        items: 1,
+        nav: false
+      },
+      768: {
+        items: 1,
+        nav: true
+      }
+    },
+    nav: true,
+    autoplay: true,
+    autoplayTimeout: 5000,
+    autoplayHoverPause: true
+  };
+
+  // Add categories options
+  categoryOptions: OwlOptions = {
+    loop: false,
+    mouseDrag: true,
+    touchDrag: true,
+    pullDrag: true,
+    dots: false,
+    navSpeed: 700,
+    navText: ['<i class="fas fa-chevron-left"></i>', '<i class="fas fa-chevron-right"></i>'],
+    responsive: {
+      0: {
+        items: 3,
+        nav: false
+      },
+      576: {
+        items: 4,
+        nav: true
+      },
+      768: {
+        items: 6,
+        nav: true
+      },
+      992: {
+        items: 8,
+        nav: true
+      }
+    },
+    nav: true
+  };
+
   constructor(
     private productService: ProductService,
     private cartService: CartService,
@@ -51,6 +114,8 @@ export class AllProductsComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadInitialProducts();
+    this.loadCarrousels();
+    this.loadCategories();
   }
 
   loadInitialProducts(): void {
@@ -63,6 +128,32 @@ export class AllProductsComponent implements OnInit {
       error: (error) => {
         this.toastr.error('Error loading products');
         this.isLoading = false;
+      }
+    });
+  }
+
+  loadCarrousels(): void {
+    this.productService.getCarrousels(1, 5).subscribe({
+      next: (data) => {
+        console.log('Carousel data:', data);
+        this.carrousels = data;
+      },
+      error: (error) => {
+        console.error('Carousel error:', error);
+        this.toastr.error('Error loading carousel');
+      }
+    });
+  }
+
+  loadCategories(): void {
+    this.productService.getCategories(1, 10).subscribe({
+      next: (data) => {
+        console.log('Categories data:', data);
+        this.categories = data;
+      },
+      error: (error) => {
+        console.error('Categories error:', error);
+        this.toastr.error('Error loading categories');
       }
     });
   }
@@ -121,5 +212,25 @@ export class AllProductsComponent implements OnInit {
       this.wishlistService.setWishItem(wishItem);
       this.toastr.success('Product added to wishlist successfully');
     }
+  }
+
+  // Add method to handle category click
+  onCategoryClick(categoryId: string): void {
+    this.isLoading = true;
+    this.products = []; // Clear existing products
+    this.page = 1; // Reset page number
+    
+    this.productService.getProductsByCategory(categoryId).subscribe({
+      next: (data) => {
+        this.products = data;
+        this.isLoading = false;
+        this.hasMoreData = data.length === this.pageSize;
+      },
+      error: (error) => {
+        console.error('Error loading category products:', error);
+        this.toastr.error('Error loading category products');
+        this.isLoading = false;
+      }
+    });
   }
 }

@@ -18,7 +18,7 @@ export interface IProductInfo {
     productId: number;
     productSKU: string;
     productName: string;
-    categoryId: number;
+    categoryId: string;
 }
 
 export interface DetailedProductInfo {
@@ -106,4 +106,21 @@ export interface WarrantyInfo {
 
 export interface BasicProductView extends BaseModel {
     basic: BasicProductInfo;
-} 
+}
+
+
+export interface Carrousel {
+  id: string; // Use UUID for unique IDs
+  carrouselId: string;
+  imageUrl: string;
+  createdAt: number;
+  updatedAt: number;
+}
+
+export interface CategoryModel {
+  categoryId: string; // Use UUID for unique IDs
+  categoryName: string;
+  categoryImage: string;
+  createdAt: number;
+  updatedAt: number;
+}
