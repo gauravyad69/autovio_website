@@ -1,7 +1,7 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
-import { HotToastService } from '@ngneat/hot-toast';
+import { ToastrService } from 'ngx-toastr';
 import { WishlistService } from '../../pages/services/wishlist.service';
 import { CartService } from '../../pages/services/cart.service';
 import { WishItem } from '../../pages/models/wishlist';
@@ -33,7 +33,7 @@ export class WishlistComponent implements OnInit {
   constructor(
     private _wishlistService: WishlistService,
     private _cartService: CartService,
-    private _toast: HotToastService,
+    private _toast: ToastrService,
     private router: Router
   ) { }
 
@@ -57,10 +57,7 @@ export class WishlistComponent implements OnInit {
   deleteWishItem() {
     this._wishlistService.deleteWishItem(this.deleteProductId);
     this.closeCofirmModal();
-    this._toast.error('Product removed from wishlist',
-      {
-        position: 'top-left'
-      });
+    this._toast.error('Product removed from wishlist');
   }
 
   addToCart(item: WishItem) {
@@ -69,10 +66,7 @@ export class WishlistComponent implements OnInit {
       quantity: 1
     };
     this._cartService.setCartItem(cartItem);
-    this._toast.success('Product added to cart successfully',
-      {
-        position: 'top-left'
-      });
+    this._toast.success('Product added to cart successfully');
   }
 
   navigateToProductDetails(productId: number) {

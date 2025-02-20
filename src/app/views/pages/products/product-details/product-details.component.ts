@@ -5,7 +5,7 @@ import { CarouselModule, OwlOptions } from 'ngx-owl-carousel-o';
 import { ProductService } from '../services/product.service';
 import { CartService } from '../../services/cart.service';
 import { WishlistService } from '../../services/wishlist.service';
-import { HotToastService } from '@ngneat/hot-toast';
+import { ToastrService } from 'ngx-toastr';
 import { ProductModel } from '../../models/product.model';
 import { CartItem } from '../../models/cart';
 import { WishItem } from '../../models/wishlist';
@@ -13,7 +13,7 @@ import { CarouselService } from 'ngx-owl-carousel-o/lib/services/carousel.servic
 import { ProductComponent } from '../product/product.component';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
-@Component({ 
+@Component({
   selector: 'app-product-details',
   templateUrl: './product-details.component.html',
   styleUrls: ['./product-details.component.css'],
@@ -24,7 +24,7 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
     RouterModule,
     CarouselModule,
     NgxSkeletonLoaderModule
-  ] 
+  ]
 })
 export class ProductDetailsComponent implements OnInit {
   backgroundPos: string = 'center center';
@@ -140,7 +140,7 @@ export class ProductDetailsComponent implements OnInit {
     private _productService: ProductService,
     private _cartService: CartService,
     private _route: ActivatedRoute,
-    private _toast: HotToastService,
+    private _toast: ToastrService,
     private _wishlistService: WishlistService,
   ) { }
 
@@ -226,10 +226,7 @@ export class ProductDetailsComponent implements OnInit {
       quantity: 1
     };
     this._cartService.setCartItem(cartItem);
-    this._toast.success('Product added to cart successfully',
-      {
-        position: 'top-left'
-      });
+    this._toast.success('Product added to cart successfully');
   }
 
   addProductToWishList(item: any) {
@@ -238,17 +235,11 @@ export class ProductDetailsComponent implements OnInit {
     };
     if (this.isProductInWishList) {
       this._wishlistService.deleteWishItem(WishItem.product?.basic?.productId!);
-      this._toast.error('Product removed from wishlist',
-        {
-          position: 'top-left'
-        });
+      this._toast.error('Product removed from wishlist');
     }
     else {
       this._wishlistService.setWishItem(WishItem);
-      this._toast.success('Product added to wishlist successfully',
-        {
-          position: 'top-left'
-        });
+      this._toast.success('Product added to wishlist successfully');
     }
   }
 
@@ -272,4 +263,3 @@ export class ProductDetailsComponent implements OnInit {
   }
 
 }
- 

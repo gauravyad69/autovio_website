@@ -1,7 +1,7 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
-import { HotToastService } from '@ngneat/hot-toast';
+import { ToastrService } from 'ngx-toastr';
 import { CartItem } from '../../pages/models/cart';
 import { CartService } from '../../pages/services/cart.service';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
@@ -28,7 +28,7 @@ export class CartComponent implements OnInit {
 
   constructor(
     private _cartService: CartService,
-    private _toast: HotToastService,
+    private _toast: ToastrService,
     private router: Router
   ) { }
 
@@ -52,10 +52,7 @@ export class CartComponent implements OnInit {
   deleteCartItem() {
     this._cartService.deleteCartItem(this.deleteProductId);
     this.closeCofirmModal();
-    this._toast.error('Product removed from cart',
-      {
-        position: 'top-left'
-      });
+    this._toast.error('Product removed from cart');
   }
 
   getTotalPrice() {

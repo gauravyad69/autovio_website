@@ -2,7 +2,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { HotToastService } from '@ngneat/hot-toast';
+import { ToastrService } from 'ngx-toastr';
 import { AuthService } from '../services/auth.service';
 import { LocalstorageService } from '../services/localstorage.service';
 import { CommonModule } from '@angular/common';
@@ -25,13 +25,15 @@ export class RegisterComponent implements OnInit {
 
   passwordVisible: boolean = false
   registerFormGroup!: FormGroup;
+  
   isSubmitted: boolean = false;
   authError: boolean = false;
   authMessage:string = 'Email or Password are wrong';
   constructor(
     private _formBuilder: FormBuilder,
     private _auth: AuthService,
-    private _toast: HotToastService,
+    private _localstorageService: LocalstorageService,
+    private _toast: ToastrService,
     private _router: Router
   ) { }
   initRegisterForm() {
@@ -46,28 +48,25 @@ export class RegisterComponent implements OnInit {
 
     if (this.registerFormGroup.invalid) return;
 
-    this._auth.register(this.registerForm.name.value,this.registerForm.email.value, this.registerForm.password.value).pipe(
-      this._toast.observe(
-        {
-          loading: 'Logging in...',
-          success: 'Congrats! You are registered',
-          error: ({ error }) => `There was an error: ${error.message} `
-        }
-      ),
-      ).subscribe(
-      (user) => {
+    this._auth.register(this.registerForm.name.value,this.registerForm.email.value, this.registerForm.password.value).subscribe({
+      next: (user) => {
         this.authError = false;
+        this._localstorageService.setToken(user.token);
+        this._auth.startRefreshTokenTimer();
+        this._toast.success('Congrats! You are registered');
         this._router.navigate(['/auth']);
       },
-      (error: HttpErrorResponse) => {
+      error: (error: HttpErrorResponse) => {
         console.log(error)
         this.authError = true;
         if (error.status !== 400) {
           this.authMessage = error.message;
         }
+        this._toast.error(`There was an error: ${error.message}`);
       }
-    );
+    });
   }
+
 
   get registerForm() {
     return this.registerFormGroup.controls;

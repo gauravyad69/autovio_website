@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  api: 'https://api.escuelajs.co/api/',
+  api: 'https://api.parts.com.np/',
 } as const;

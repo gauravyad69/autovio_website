@@ -1,47 +1,37 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, Input, OnInit } from '@angular/core';
-import { CommonModule, CurrencyPipe } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Component, Input, OnInit } from '@angular/core';
 import { CartService } from '../../services/cart.service';
 import { WishlistService } from '../../services/wishlist.service';
+import { ProductService } from '../services/product.service';
 import { CartItem } from '../../models/cart';
 import { WishItem } from '../../models/wishlist';
-import { HotToastService } from '@ngneat/hot-toast';
-import { ProductModel } from '../../models/product.model';
-import { NgOptimizedImage } from '@angular/common';
+import {ToastrService} from "ngx-toastr";
+import {ProductModel} from "../../models/product.model";
+import {RouterLink} from "@angular/router";
+
 
 @Component({
   selector: 'app-product',
   templateUrl: './product.component.html',
-  styleUrls: ['./product.component.scss'],
   standalone: true,
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [
-    CommonModule,
-    RouterModule,
-    CurrencyPipe,
-    NgOptimizedImage
-  ]
+    RouterLink
+  ],
+  styleUrls: ['./product.component.css']
 })
-export class ProductComponent {
-  @Input() product!: ProductModel;
-  isProductInWishList: boolean = false;
-  WishItems!: WishItem[];
+export class ProductComponent implements OnInit {
 
+  @Input() product: ProductModel | undefined;
+  WishItems!: WishItem[];
   constructor(
+    private _product: ProductService,
     private _cartService: CartService,
     private _wishlistService: WishlistService,
-    private _toast: HotToastService
+    private _toast: ToastrService
   ) { }
 
   ngOnInit(): void {
     this.getWishList();
   }
-
-  onImageError(event: Event) {
-    const img = event.target as HTMLImageElement;
-    img.src = 'assets/images/ImageNotFound.png';
-  }
-
 
   addProductToWishList(item: any, event: any) {
     const WishItem: WishItem = {
@@ -50,18 +40,12 @@ export class ProductComponent {
     if (event.currentTarget.classList.contains("is-favourite")) {
       event.currentTarget.classList.remove("is-favourite")
       this._wishlistService.deleteWishItem(WishItem.product?.basic?.productId!);
-      this._toast.error('Product removed from wishlist',
-        {
-          position: 'top-left'
-        });
+      this._toast.error('Product removed from wishlist');
     }
     else {
       event.currentTarget.classList.add("is-favourite")
       this._wishlistService.setWishItem(WishItem);
-      this._toast.success('Product added to wishlist successfully',
-        {
-          position: 'top-left'
-        });
+      this._toast.success('Product added to wishlist successfully');
     }
   }
 
@@ -71,15 +55,12 @@ export class ProductComponent {
       quantity: 1
     };
     this._cartService.setCartItem(cartItem);
-    this._toast.success('Product added to cart successfully',
-      {
-        position: 'top-left'
-      });
+    this._toast.success('Product added to cart successfully');
 
   }
 
   productInWishList(itm: any) {
-    const cartItemExist = this.WishItems.find((item) => item.product?.basic?.productId === itm.id);
+    const cartItemExist = this.WishItems.find((item) => item.product?.basic.productId === itm.id);
     return cartItemExist;
   }
   getWishList() {

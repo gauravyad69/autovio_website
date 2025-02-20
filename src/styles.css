@@ -32,3 +32,47 @@
 .empty-img-default-g {
     fill: #fff;
 }
+
+
+.toast-container {
+    padding-left: 5%;
+    --toastr-font-family: 'Your-Font', sans-serif;
+    --toastr-text-color: #ffffff;
+    --toastr-success-bg: #28a745;
+    --toastr-error-bg: #dc3545;
+    --toastr-warning-bg: #ffc107;
+    --toastr-info-bg: #17a2b8;
+  }
+  
+  .toast-success {
+    background-color: var(--toastr-success-bg) !important;
+  }
+  
+  .toast-error {
+    background-color: var(--toastr-error-bg) !important;
+  }
+  
+  .toast-info {
+    background-color: var(--toastr-info-bg) !important;
+  }
+  
+  .toast-warning {
+    background-color: var(--toastr-warning-bg) !important;
+  }
+  
+  .toast-container .ngx-toastr {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border-radius: 8px;
+    padding: 15px;
+  }
+  
+  .toast-container .toast-close-button {
+    font-size: 18px;
+    right: 8px;
+    top: 8px;
+  }
+  
+  .toast-progress {
+    height: 4px;
+    opacity: 0.8;
+  }
