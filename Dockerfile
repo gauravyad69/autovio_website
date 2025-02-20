@@ -14,7 +14,7 @@ RUN npm run build --prod
 FROM caddy:2.6.0-alpine
 COPY Caddyfile /etc/caddy/Caddyfile
 # Copy built assets from build stage
-COPY --from=build /app/dist/ecommerce/* /usr/share/caddy
+COPY --from=build /dist/ecommerce/* /usr/share/caddy
 # Expose the port and use default Caddy command
 EXPOSE 9092
 
