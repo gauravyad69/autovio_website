@@ -1,6 +1,6 @@
 # Build stage - use Node.js Alpine image
 FROM node:20.18.1-alpine AS build
-WORKDIR /ecommerce
+WORKDIR /app
 
 # Copy package files and install dependencies
 COPY package*.json ./
@@ -16,10 +16,7 @@ COPY Caddyfile /etc/caddy/Caddyfile
 
 # List directories during the build process
 RUN ls -d /
-RUN ls
-RUN ls -d /
-RUN ls -d ecommerce/
-RUN ls -d app/
+RUN ls -l
 
 # Copy built assets from build stage
 
