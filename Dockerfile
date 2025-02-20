@@ -16,7 +16,7 @@ COPY Caddyfile /etc/caddy/Caddyfile
 
 # List directories during the build process
 RUN ls -d /
-RUN ls -d */
+RUN ls
 RUN ls -d /
 RUN ls -d ecommerce/
 RUN ls -d app/
