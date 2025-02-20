@@ -8,6 +8,7 @@ import { OrderSource, ShippingMethod, PaymentMethod } from '../../models/order.t
 import { CreateOrderRequest, LineItem } from '../../models/order.model';
 import { CartItem } from '../../models/cart';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import {NprCurrencyPipe} from "../../products/pipe/npr-currency.pipe";
 
 @Component({
   selector: 'app-checkout-page',
@@ -18,7 +19,8 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
     CommonModule,
     RouterModule,
     ReactiveFormsModule,
-    NgxSkeletonLoaderModule
+    NgxSkeletonLoaderModule,
+    NprCurrencyPipe
   ]
 })
 export class CheckoutPageComponent {

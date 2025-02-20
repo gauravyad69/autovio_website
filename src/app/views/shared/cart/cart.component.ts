@@ -5,6 +5,8 @@ import { ToastrService } from 'ngx-toastr';
 import { CartItem } from '../../pages/models/cart';
 import { CartService } from '../../pages/services/cart.service';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { NprCurrencyPipe } from '../../../views/pages/products/pipe/npr-currency.pipe';
+import {ConfirmModelComponent} from "../confirm-model/confirm-model.component";
 
 @Component({
   selector: 'app-cart',
@@ -15,7 +17,9 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
   imports: [
     CommonModule,
     RouterModule,
-    NgxSkeletonLoaderModule
+    NgxSkeletonLoaderModule,
+    NprCurrencyPipe,
+    ConfirmModelComponent
   ]
 })
 export class CartComponent implements OnInit {

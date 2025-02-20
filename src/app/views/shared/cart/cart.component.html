@@ -66,7 +66,9 @@
                             <a href="#" (click)="$event.preventDefault(); navigateToProductDetails(item.product?.basic?.productId!)" class="item-title">
                                 {{item.product?.basic?.productName}}
                             </a>
-                            <h5 class="item-price">${{item.product?.basic?.pricing?.regularPrice?.amount}}</h5>
+                            <div class="item-price">
+                                {{ item.product?.basic?.pricing?.regularPrice?.amount | nprCurrency }}
+                            </div>
                             <div class="input-group input-spinner">
                                 <div class="quantity-selector">
                                     <button type="button" class="btn  btn-quantity"
@@ -97,7 +99,7 @@
                 }
             </div>
             <div class="sidebar-total">
-                <h5 class="price-total">Total: <span>${{totalPrice ?? 0}}</span></h5>
+                <h5 class="price-total">Total: <span>${{totalPrice ?? 0 | nprCurrency}}</span></h5>
                 <button class="btn btn-warning w-100 mb-2" routerLink="/checkout">Proceed to checkout</button>
             </div>
         } @placeholder {

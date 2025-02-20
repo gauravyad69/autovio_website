@@ -8,13 +8,17 @@ import { WishItem } from '../../models/wishlist';
 import {ToastrService} from "ngx-toastr";
 import {ProductModel} from "../../models/product.model";
 import {RouterLink} from "@angular/router";
-import {CurrencyPipe} from "@angular/common";
+import { NprCurrencyPipe } from '../pipe/npr-currency.pipe';
 
 @Component({
   selector: 'app-product',
   templateUrl: './product.component.html',
   standalone: true,
-  imports: [CommonModule, RouterLink, CurrencyPipe],
+  imports: [
+    CommonModule,
+    RouterLink,
+    NprCurrencyPipe
+  ],
   styleUrls: ['./product.component.scss']
 })
 export class ProductComponent implements OnInit {

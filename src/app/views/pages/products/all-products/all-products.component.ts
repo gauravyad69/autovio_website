@@ -12,6 +12,7 @@ import { FilterPipe } from "../pipe/filter.pipe";
 import { InfiniteScrollModule } from "ngx-infinite-scroll";
 import { FormsModule } from "@angular/forms";
 import { ProductModel } from '../../models/product.model';
+import { NprCurrencyPipe } from '../pipe/npr-currency.pipe';
 
 @Component({
   selector: 'app-all-products',
@@ -23,7 +24,8 @@ import { ProductModel } from '../../models/product.model';
     NgxSkeletonLoaderModule,
     FilterPipe,
     InfiniteScrollModule,
-    FormsModule
+    FormsModule,
+    NprCurrencyPipe
   ],
   styleUrls: ['./all-products.component.scss']
 })

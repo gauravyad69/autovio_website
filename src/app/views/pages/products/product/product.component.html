@@ -30,10 +30,10 @@
       <span class="current-price">
         {{ product?.basic?.pricing?.isOnSale ?
            product?.basic?.pricing?.salePrice?.amount :
-           product?.basic?.pricing?.regularPrice?.amount | currency }}
+           product?.basic?.pricing?.regularPrice?.amount | nprCurrency }}
       </span>
       <span class="original-price" *ngIf="product?.basic?.pricing?.isOnSale">
-        {{ product?.basic?.pricing?.regularPrice?.amount | currency }}
+        {{ product?.basic?.pricing?.regularPrice?.amount | nprCurrency }}
       </span>
     </div>
 
