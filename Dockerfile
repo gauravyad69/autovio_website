@@ -1,6 +1,6 @@
 # Build stage - use Node.js Alpine image
 FROM node:20.18.1-alpine AS build
-WORKDIR /Ecommerce
+WORKDIR /ecommerce
 
 # Copy package files and install dependencies
 COPY package*.json ./
@@ -14,7 +14,7 @@ RUN npm run build --prod
 FROM caddy:2.6.0-alpine
 COPY Caddyfile /etc/caddy/Caddyfile
 # Copy built assets from build stage
-COPY --from=build /app/dist/Ecommerce/* /usr/share/caddy
+COPY --from=build /app/dist/ecommerce/* /usr/share/caddy
 # Expose the port and use default Caddy command
-EXPOSE 9091
+EXPOSE 9092
 

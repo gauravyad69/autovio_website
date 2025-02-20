@@ -11,5 +11,5 @@ import { FooterComponent } from './views/layout/footer/footer.component';
   imports: [RouterOutlet, HeaderComponent, FooterComponent]
 })
 export class AppComponent {
-  title = 'Ecommerce';
+  title = 'Autovio';
 }

@@ -10,7 +10,7 @@
     }
   },
   "projects": {
-    "Ecommerce": {
+    "ecommerce": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -20,7 +20,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/Ecommerce",
+            "outputPath": "dist/ecommerce",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": ["zone.js"],
@@ -32,7 +32,7 @@
             "styles": [
               "node_modules/ngx-owl-carousel-o/lib/styles/prebuilt-themes/owl.carousel.min.css",
               "node_modules/ngx-owl-carousel-o/lib/styles/prebuilt-themes/owl.theme.default.min.css",
-            
+
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "node_modules/@fortawesome/fontawesome-free/css/all.min.css",
               "src/styles.css"
@@ -78,10 +78,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "Ecommerce:build:production"
+              "buildTarget": "ecommerce:build:production"
             },
             "development": {
-              "buildTarget": "Ecommerce:build:development"
+              "buildTarget": "ecommerce:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -89,7 +89,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "buildTarget": "Ecommerce:build"
+            "buildTarget": "ecommerce:build"
           }
         },
         "test": {
