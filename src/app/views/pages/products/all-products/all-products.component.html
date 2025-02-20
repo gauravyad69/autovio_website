@@ -107,7 +107,7 @@
       <app-product
         [product]="product"
         (addToCart)="addProductToCart($event)"
-        (addToWishlist)="addProductToWishList(product, $event.event)">
+        (addToWishlist)="addProductToWishList($event.product, $event.event)">
       </app-product>
     </ng-container>
   </div>

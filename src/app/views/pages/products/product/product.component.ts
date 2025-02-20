@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CartService } from '../../services/cart.service';
 import { WishlistService } from '../../services/wishlist.service';
@@ -17,12 +17,13 @@ import {CurrencyPipe} from "@angular/common";
   imports: [CommonModule, RouterLink, CurrencyPipe],
   styleUrls: ['./product.component.scss']
 })
-export class ProductComponent {
+export class ProductComponent implements OnInit {
   @Input() product?: ProductModel;
   @Output() addToCart = new EventEmitter<ProductModel>();
   @Output() addToWishlist = new EventEmitter<{product: ProductModel, event: Event}>();
 
-  WishItems!: WishItem[];
+  isInWishlist: boolean = false;
+
   constructor(
     private _product: ProductService,
     private _cartService: CartService,
@@ -31,7 +32,16 @@ export class ProductComponent {
   ) { }
 
   ngOnInit(): void {
-    this.getWishList();
+    this.checkWishlistStatus();
+  }
+
+  checkWishlistStatus() {
+    if (this.product) {
+      const wishlist = this._wishlistService.getWishlist();
+      this.isInWishlist = wishlist.items?.some(
+        item => item.product?.basic?.productId === this.product?.basic?.productId
+      ) ?? false;
+    }
   }
 
   onAddToCart(): void {
@@ -41,8 +51,9 @@ export class ProductComponent {
   }
 
   onAddToWishlist(event: Event): void {
+    event.preventDefault();
     if (this.product) {
-      this.addToWishlist.emit({product: this.product, event});
+      this.addToWishlist.emit({ product: this.product, event });
     }
   }
 
@@ -76,11 +87,11 @@ export class ProductComponent {
 
   }
 
-  productInWishList(itm: any) {
-    const cartItemExist = this.WishItems.find((item) => item.product?.basic.productId === itm.id);
-    return cartItemExist;
-  }
+  // productInWishList(itm: any) {
+  //   const cartItemExist = this.WishItems.find((item) => item.product?.basic.productId === itm.id);
+  //   return cartItemExist;
+  // }
   getWishList() {
-    this.WishItems = this._wishlistService.getWishlist().items!;
+    this._wishlistService.getWishlist().items!;
   }
 }

@@ -3,7 +3,7 @@
     <a [routerLink]="['/products', product?.basic?.productId]">
       <img [src]="product?.basic?.inventory?.mainImage" [alt]="product?.basic?.productName">
     </a>
-    
+
     <!-- Sale Badge -->
     <div class="product-sale" *ngIf="product?.basic?.pricing?.isOnSale">
       -{{ calculateDiscount(
@@ -11,12 +11,12 @@
         product?.basic?.pricing?.salePrice?.amount!
       ) }}%
     </div>
-    
+
     <!-- Wishlist Button -->
-    <button 
-      class="btn-favourite" 
+    <button
+      class="btn-favourite"
       (click)="onAddToWishlist($event)"
-      [class.is-favourite]="false">
+      [class.is-favourite]="isInWishlist">
       <i class="fas fa-heart"></i>
     </button>
   </div>
@@ -25,11 +25,11 @@
     <a [routerLink]="['/products', product?.basic?.productId]" class="product-name">
       {{ product?.basic?.productName }}
     </a>
-    
+
     <div class="product-price">
       <span class="current-price">
-        {{ product?.basic?.pricing?.isOnSale ? 
-           product?.basic?.pricing?.salePrice?.amount : 
+        {{ product?.basic?.pricing?.isOnSale ?
+           product?.basic?.pricing?.salePrice?.amount :
            product?.basic?.pricing?.regularPrice?.amount | currency }}
       </span>
       <span class="original-price" *ngIf="product?.basic?.pricing?.isOnSale">
@@ -38,10 +38,9 @@
     </div>
 
     <div class="product-actions">
-      <button 
+      <button
         class="add-to-cart"
-        (click)="onAddToCart()"
-        [disabled]="!product?.basic?.inventory?.isAvailable">
+        (click)="onAddToCart()">
         <i class="fas fa-shopping-cart"></i>
         <span>Add to Cart</span>
       </button>

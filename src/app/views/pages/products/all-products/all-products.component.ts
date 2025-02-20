@@ -88,12 +88,20 @@ export class AllProductsComponent implements OnInit {
   }
 
   addProductToCart(item: ProductModel): void {
+    if (!item) return;
+
     const cartItem: CartItem = {
       product: item,
       quantity: 1
     };
-    this.cartService.setCartItem(cartItem);
-    this.toastr.success('Product added to cart successfully');
+
+    try {
+      this.cartService.setCartItem(cartItem);
+      this.toastr.success('Product added to cart successfully');
+    } catch (error) {
+      console.error('Error adding to cart:', error);
+      this.toastr.error('Failed to add product to cart');
+    }
   }
 
   addProductToWishList(item: ProductModel, event: Event): void {
