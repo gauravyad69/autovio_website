@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import {BehaviorSubject, Observable} from 'rxjs';
 import { Cart, CartItem, CartItemDetailed } from '../models/cart';
 import { WishList } from '../models/wishlist';
 
@@ -9,9 +9,19 @@ export const WISHLIST_KEY = 'wishlist';
   providedIn: 'root'
 })
 export class WishlistService {
-  wishList$: BehaviorSubject<WishList> = new BehaviorSubject(this.getWishlist());
+  private wishlist: WishList = { items: [] };  // Initialize as empty object
 
-  constructor() {}
+  private wishlistSubject: BehaviorSubject<WishList> = new BehaviorSubject<WishList>(this.wishlist);
+
+  wishList$: Observable<WishList> = this.wishlistSubject.asObservable();
+
+  constructor() {
+    // Load wishlist from localStorage if exists
+    const savedWishlist = localStorage.getItem(WISHLIST_KEY);
+    if (savedWishlist) {
+      this.wishlist = JSON.parse(savedWishlist);
+    }
+  }
 
   initWishlistLocalStorage() {
     const Wishlist: WishList = this.getWishlist();
@@ -30,13 +40,11 @@ export class WishlistService {
     };
     const wishListCartJson = JSON.stringify(wishListCart);
     localStorage.setItem(WISHLIST_KEY, wishListCartJson);
-    this.wishList$.next(wishListCart);
+    this.wishlist = wishListCart;
   }
 
   getWishlist(): WishList {
-    const wishlistJsonString = localStorage.getItem(WISHLIST_KEY);
-    const cart: Cart = JSON.parse(wishlistJsonString!);
-    return cart;
+    return this.wishlist;
   }
 
   setWishItem(cartItem: CartItem, updateCartItem?: boolean): Cart {
@@ -60,7 +68,7 @@ export class WishlistService {
 
     const cartJson = JSON.stringify(WishList);
     localStorage.setItem(WISHLIST_KEY, cartJson);
-    this.wishList$.next(WishList);
+    this.wishlist = WishList;
     return WishList;
   }
 
@@ -73,6 +81,6 @@ export class WishlistService {
     const wishListJsonString = JSON.stringify(WishList);
     localStorage.setItem(WISHLIST_KEY, wishListJsonString);
 
-    this.wishList$.next(WishList);
+    this.wishlist = WishList;
   }
 }

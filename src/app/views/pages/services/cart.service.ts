@@ -7,9 +7,16 @@ export const CART_KEY = 'cart';
   providedIn: 'root'
 })
 export class CartService {
+  private cart: CartItem[] = [];  // Initialize as empty array
   cart$: BehaviorSubject<Cart> = new BehaviorSubject(this.getCart());
 
-  constructor() {}
+  constructor() {
+    // Load cart from localStorage if exists
+    const savedCart = localStorage.getItem('cart');
+    if (savedCart) {
+      this.cart = JSON.parse(savedCart);
+    }
+  }
 
   initCartLocalStorage() {
     const cart: Cart = this.getCart();

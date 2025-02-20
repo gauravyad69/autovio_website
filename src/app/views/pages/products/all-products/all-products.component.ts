@@ -1,136 +1,115 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { CartItem } from '../../models/cart';
 import { WishItem } from '../../models/wishlist';
 import { CartService } from '../../services/cart.service';
 import { WishlistService } from '../../services/wishlist.service';
 import { ProductService } from '../services/product.service';
-import {ToastrService} from "ngx-toastr";
-import {ProductComponent} from "../product/product.component";
-import {NgxSkeletonLoaderModule} from "ngx-skeleton-loader";
-import {FilterPipe} from "../pipe/filter.pipe";
-import {InfiniteScrollDirective} from "ngx-infinite-scroll";
-import {FormsModule} from "@angular/forms";
+import { ToastrService } from "ngx-toastr";
+import { ProductComponent } from "../product/product.component";
+import { NgxSkeletonLoaderModule } from "ngx-skeleton-loader";
+import { FilterPipe } from "../pipe/filter.pipe";
+import { InfiniteScrollModule } from "ngx-infinite-scroll";
+import { FormsModule } from "@angular/forms";
+import { ProductModel } from '../../models/product.model';
 
 @Component({
   selector: 'app-all-products',
   templateUrl: './all-products.component.html',
   standalone: true,
   imports: [
+    CommonModule,
     ProductComponent,
     NgxSkeletonLoaderModule,
     FilterPipe,
-    InfiniteScrollDirective,
+    InfiniteScrollModule,
     FormsModule
   ],
-  styleUrls: ['./all-products.component.css']
+  styleUrls: ['./all-products.component.scss']
 })
 export class AllProductsComponent implements OnInit {
+  products: ProductModel[] = [];
+  filterValue: string = 'Default';
+  page: number = 1;
+  pageSize: number = 20;
+  isLoading: boolean = false;
+  hasMoreData: boolean = true;
 
-  products: any[] = [];
-  fliterValue: string = 'Default';
-  limit: number = 10;
-  scrollDistance: number = 2;
-  scrollUpDistance: number = 1.5;
+  // Infinite scroll config
   throttle: number = 300;
-  Loading: boolean = false;
+  scrollDistance: number = 1;
+  scrollUpDistance: number = 2;
 
   constructor(
-    private _product: ProductService,
-    private _cartService: CartService,
-    private _wishlistService: WishlistService,
-    private _toast: ToastrService
+    private productService: ProductService,
+    private cartService: CartService,
+    private wishlistService: WishlistService,
+    private toastr: ToastrService
   ) { }
 
-
-  getAllProducts(offset: number, limit: number) {
-    this.Loading = true;
-    this._product.getProduct(offset, limit).subscribe((data) => {
-
-      setTimeout(() => {
-        this.products = [...this.products, ...data]
-        this.Loading = false;
-      }, 4000);
-    })
-
-    // if (number == 1) {
-    //   this._product.getProduct(0).subscribe((data) => {
-    //     this.products = data
-    //   })
-    // } else {
-    //   this._product.getProduct(number * 20).subscribe((data) => {
-    //     this.products = data
-    //   })
-    // }
-    // window.scroll(0, 500);
-    // this.PageNumber = number;
+  ngOnInit(): void {
+    this.loadInitialProducts();
   }
 
-  // nextPage() {
-  //   if (this.PageNumber == 9) {
-  //     this.PageNumber = 1;
-  //   } else {
-  //     this.PageNumber++;
-  //   }
-  //   this.getAllProducts(this.PageNumber);
+  loadInitialProducts(): void {
+    this.isLoading = true;
+    this.productService.getProduct(1, this.pageSize).subscribe({
+      next: (data) => {
+        this.products = data;
+        this.isLoading = false;
+      },
+      error: (error) => {
+        this.toastr.error('Error loading products');
+        this.isLoading = false;
+      }
+    });
+  }
 
-  // }
+  onScroll(): void {
+    if (this.isLoading || !this.hasMoreData) return;
 
+    this.isLoading = true;
+    this.page++;
 
-  // provPage() {
-  //   if (this.PageNumber == 1) {
-  //     this.PageNumber = 9;
-  //   } else {
-  //     this.PageNumber--;
-  //   }
-  //   this.getAllProducts(this.PageNumber);
+    this.productService.getProduct(this.page, this.pageSize).subscribe({
+      next: (data) => {
+        if (data.length === 0) {
+          this.hasMoreData = false;
+        } else {
+          this.products = [...this.products, ...data];
+        }
+        this.isLoading = false;
+      },
+      error: (error) => {
+        this.toastr.error('Error loading more products');
+        this.isLoading = false;
+      }
+    });
+  }
 
-  // }
-
-
-  addProductToCart(item: any) {
+  addProductToCart(item: ProductModel): void {
     const cartItem: CartItem = {
       product: item,
       quantity: 1
     };
-    this._cartService.setCartItem(cartItem);
-    this._toast.success('Product added to cart successfully');
-
+    this.cartService.setCartItem(cartItem);
+    this.toastr.success('Product added to cart successfully');
   }
 
-  addProductToWishList(item: any, event: any) {
-    const WishItem: WishItem = {
+  addProductToWishList(item: ProductModel, event: Event): void {
+    const target = event.currentTarget as HTMLElement;
+    const wishItem: WishItem = {
       product: item
     };
-    if (event.currentTarget.classList.contains("is-favourite")) {
-      event.currentTarget.classList.remove("is-favourite")
-      this._wishlistService.deleteWishItem(WishItem.product?.basic?.productId!);
-      this._toast.error('Product removed from wishlist');
+
+    if (target.classList.contains("is-favourite")) {
+      target.classList.remove("is-favourite");
+      this.wishlistService.deleteWishItem(wishItem.product?.basic?.productId!);
+      this.toastr.error('Product removed from wishlist');
+    } else {
+      target.classList.add("is-favourite");
+      this.wishlistService.setWishItem(wishItem);
+      this.toastr.success('Product added to wishlist successfully');
     }
-    else {
-      event.currentTarget.classList.add("is-favourite")
-      this._wishlistService.setWishItem(WishItem);
-      this._toast.success('Product added to wishlist successfully');
-    }
-
   }
-
-loadProducts(): void {
-  this._product.getProduct(1,20).subscribe((data: any[]) => {
-    this.products = data;
-    console.log(this.products); // Debugging statement
-  });
-}
-
-  onScroll() {
-    const offset = this.limit;
-    this.limit = (this.limit + 20) == 178 || (this.limit + 20) > 178 ? 178 : this.limit + 20;
-    if(this.limit !== 178 ) this.getAllProducts(Math.floor(offset), Math.floor(this.limit));
-  }
-
-  ngOnInit(): void {
-    this.loadProducts();
-    this.getAllProducts(0, this.limit);
-  }
-
-
 }

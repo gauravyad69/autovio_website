@@ -1,4 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { CartService } from '../../services/cart.service';
 import { WishlistService } from '../../services/wishlist.service';
 import { ProductService } from '../services/product.service';
@@ -7,20 +8,20 @@ import { WishItem } from '../../models/wishlist';
 import {ToastrService} from "ngx-toastr";
 import {ProductModel} from "../../models/product.model";
 import {RouterLink} from "@angular/router";
-
+import {CurrencyPipe} from "@angular/common";
 
 @Component({
   selector: 'app-product',
   templateUrl: './product.component.html',
   standalone: true,
-  imports: [
-    RouterLink
-  ],
-  styleUrls: ['./product.component.css']
+  imports: [CommonModule, RouterLink, CurrencyPipe],
+  styleUrls: ['./product.component.scss']
 })
-export class ProductComponent implements OnInit {
+export class ProductComponent {
+  @Input() product?: ProductModel;
+  @Output() addToCart = new EventEmitter<ProductModel>();
+  @Output() addToWishlist = new EventEmitter<{product: ProductModel, event: Event}>();
 
-  @Input() product: ProductModel | undefined;
   WishItems!: WishItem[];
   constructor(
     private _product: ProductService,
@@ -31,6 +32,22 @@ export class ProductComponent implements OnInit {
 
   ngOnInit(): void {
     this.getWishList();
+  }
+
+  onAddToCart(): void {
+    if (this.product) {
+      this.addToCart.emit(this.product);
+    }
+  }
+
+  onAddToWishlist(event: Event): void {
+    if (this.product) {
+      this.addToWishlist.emit({product: this.product, event});
+    }
+  }
+
+  calculateDiscount(regular: number, sale: number): number {
+    return Math.round(((regular - sale) / regular) * 100);
   }
 
   addProductToWishList(item: any, event: any) {
@@ -64,9 +81,6 @@ export class ProductComponent implements OnInit {
     return cartItemExist;
   }
   getWishList() {
-    this._wishlistService.wishList$.subscribe((cart) => {
-      this.WishItems = cart.items!;
-    });
+    this.WishItems = this._wishlistService.getWishlist().items!;
   }
-
 }

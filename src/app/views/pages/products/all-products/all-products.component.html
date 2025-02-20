@@ -1,4 +1,3 @@
-
 <section class="section-intro pt-3">
   <div class="container">
 
@@ -79,47 +78,70 @@
     </div>
   </div>
 </section>
-<section class="padding-y">
-  <div class="container"      infinite-scroll
+<section class="products-container">
+  <div class="products-header">
+    <h1 class="products-title">Our Products</h1>
+    <div class="filter-container">
+      <label for="filterSelect">Sort by:</label>
+      <select
+        id="filterSelect"
+        class="filter-select"
+        [(ngModel)]="filterValue">
+        <option value="Default">Default</option>
+        <option value="Low to High">Price: Low to High</option>
+        <option value="High to Low">Price: High to Low</option>
+        <option value="A to Z">A to Z</option>
+        <option value="Z to A">Z to A</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="products-grid"
+       infiniteScroll
        [infiniteScrollDistance]="scrollDistance"
        [infiniteScrollUpDistance]="scrollUpDistance"
        [infiniteScrollThrottle]="throttle"
        (scrolled)="onScroll()">
 
-    <header class="section-heading  d-flex justify-content-between align-items-center">
-      <h4 class="section-title text-muted">Showing 1 - {{limit}} Products</h4>
-      <div class="filter-container d-flex align-items-center">
-        <p>Sort by: </p>
-        <select class="form-select" [(ngModel)]="fliterValue">
-          <option value="Default">Default</option>
-          <option value="Low to High">Price: Low to High</option>
-          <option value="High to Low">Price: High to Low</option>
-          <option value="A to Z">A to Z</option>
-          <option value="Z to A">Z to A</option>
-        </select>
-      </div>
-    </header>
+    <ng-container *ngFor="let product of products | filter : filterValue : 'Default'">
+      <app-product
+        [product]="product"
+        (addToCart)="addProductToCart($event)"
+        (addToWishlist)="addProductToWishList(product, $event.event)">
+      </app-product>
+    </ng-container>
+  </div>
 
-    <div class="row">
-      <div class="col-6 col-sm-8 col-md-6 col-lg-2" style="padding: 15px 7.5px;"
-           *ngFor="let item of products | filter : fliterValue : 'Default'">
-        <app-product [product]="item"></app-product>
-      </div>
+  <!-- Loading State -->
+  <div class="loading-grid" *ngIf="isLoading">
+    <div class="loading-item" *ngFor="let i of [1,2,3,4,5,6,7,8]">
+      <ngx-skeleton-loader
+        [theme]="{
+          'border-radius': '8px',
+          height: '200px',
+          'margin-bottom': '10px'
+        }">
+      </ngx-skeleton-loader>
+      <ngx-skeleton-loader
+        [theme]="{
+          'border-radius': '4px',
+          height: '20px',
+          width: '70%',
+          'margin-bottom': '8px'
+        }">
+      </ngx-skeleton-loader>
+      <ngx-skeleton-loader
+        [theme]="{
+          'border-radius': '4px',
+          height: '20px',
+          width: '40%'
+        }">
+      </ngx-skeleton-loader>
     </div>
+  </div>
 
-    <div class="row"  *ngIf="Loading">
-      <div class="col-6 col-sm-8 col-md-6 col-lg-2" *ngFor="let item of products">
-        <ngx-skeleton-loader [theme]="{ 'border-radius': '0', height: '150px' }"></ngx-skeleton-loader>
-        <ngx-skeleton-loader count="2"  [theme]="{ 'border-radius': '0', height: '25px' }"></ngx-skeleton-loader>
-
-        <div class="d-flex align-items-center justify-content-between">
-          <div class="w-50">
-            <ngx-skeleton-loader  [theme]="{ 'border-radius': '0', height: '28px' }"></ngx-skeleton-loader>
-          </div>
-          <ngx-skeleton-loader appearance="circle" [theme]="{ width: '29px', height: '29px' , margin: '1px' }"></ngx-skeleton-loader>
-        </div>
-      </div>
-    </div>
-
+  <!-- No More Data Message -->
+  <div class="no-more-data" *ngIf="!hasMoreData && !isLoading">
+    <p>No more products to load</p>
   </div>
 </section>
