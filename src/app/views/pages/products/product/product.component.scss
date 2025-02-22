@@ -12,15 +12,18 @@ $white: #fff;
     @content;
   }
 }
-
 .product-card {
   background: $white;
   border-radius: 8px;
   overflow: hidden;
   transition: transform 0.3s ease;
-  
+
   &:hover {
     transform: translateY(-5px);
+  }
+
+  @include mobile {
+    border-radius: 4px;
   }
 }
 
@@ -28,24 +31,24 @@ $white: #fff;
   position: relative;
   aspect-ratio: 1;
   background: $light-bg;
-  
+
   a {
     display: block;
     height: 100%;
-    
+
     img {
       width: 100%;
       height: 100%;
       object-fit: contain;
       padding: 1rem;
       transition: transform 0.3s ease;
-      
+
       &:hover {
         transform: scale(1.05);
       }
     }
   }
-  
+
   .product-sale {
     position: absolute;
     top: 1rem;
@@ -56,8 +59,13 @@ $white: #fff;
     border-radius: 0 4px 4px 0;
     font-size: 0.875rem;
     font-weight: 500;
+
+    @include mobile {
+      font-size: 0.75rem;
+      padding: 0.25rem 0.5rem;
+    }
   }
-  
+
   .btn-favourite {
     position: absolute;
     top: 1rem;
@@ -72,17 +80,22 @@ $white: #fff;
     justify-content: center;
     cursor: pointer;
     transition: all 0.3s ease;
-    
+
     &:hover, &.is-favourite {
       background: $secondary-color;
       color: $white;
+    }
+
+    @include mobile {
+      width: 2rem;
+      height: 2rem;
     }
   }
 }
 
 .product-content {
   padding: 1rem;
-  
+
   .product-name {
     color: $text-color;
     text-decoration: none;
@@ -93,31 +106,43 @@ $white: #fff;
     -webkit-box-orient: vertical;
     overflow: hidden;
     margin-bottom: 0.5rem;
-    
+
     &:hover {
       color: $primary-color;
     }
+
+    @include mobile {
+      font-size: 0.875rem;
+    }
   }
-  
+
   .product-price {
     display: flex;
     align-items: center;
     gap: 0.5rem;
     margin-bottom: 1rem;
-    
+
     .current-price {
       font-size: 1.125rem;
       font-weight: 600;
       color: $text-color;
+
+      @include mobile {
+        font-size: 1rem;
+      }
     }
-    
+
     .original-price {
       color: $gray-color;
       text-decoration: line-through;
       font-size: 0.875rem;
+
+      @include mobile {
+        font-size: 0.75rem;
+      }
     }
   }
-  
+
   .product-actions {
     .add-to-cart {
       width: 100%;
@@ -133,19 +158,28 @@ $white: #fff;
       gap: 0.5rem;
       cursor: pointer;
       transition: background 0.3s ease;
-      
+
       &:hover {
         background: darken($primary-color, 10%);
       }
-      
+
       &:disabled {
         background: $gray-color;
         cursor: not-allowed;
       }
-      
+
       i {
         font-size: 1.125rem;
       }
+
+      @include mobile {
+        padding: 0.5rem;
+        font-size: 0.875rem;
+
+        i {
+          font-size: 1rem;
+        }
+      }
     }
   }
-} 
+}
