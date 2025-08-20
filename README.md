@@ -1,4 +1,21 @@
-# Store (Ecommerce App)
+# Store (Ecommerce App) (Deprecated)
+
+
+
+
+
+
+Avoid using this, legacy system, the code is broken and doesn't build
+
+
+
+
+
+
+
+
+
+
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 12.2.6.
 
